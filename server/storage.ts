@@ -1,4 +1,6 @@
 import { users, type User, type InsertUser, leads, type Lead, type InsertLead } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -13,49 +15,38 @@ export interface IStorage {
   getAllLeads(): Promise<Lead[]>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private leads: Map<number, Lead>;
-  
-  private userId: number;
-  private leadId: number;
-
-  constructor() {
-    this.users = new Map();
-    this.leads = new Map();
-    
-    this.userId = 1;
-    this.leadId = 1;
-  }
-
+// DatabaseStorage implementation that uses the database
+export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.userId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
   
   async createLead(insertLead: InsertLead): Promise<Lead> {
-    const id = this.leadId++;
     const createdAt = new Date().toISOString();
-    const lead: Lead = { ...insertLead, id, createdAt };
-    this.leads.set(id, lead);
+    const [lead] = await db
+      .insert(leads)
+      .values({ ...insertLead, createdAt })
+      .returning();
     return lead;
   }
   
   async getAllLeads(): Promise<Lead[]> {
-    return Array.from(this.leads.values());
+    return await db.select().from(leads);
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
