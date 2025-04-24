@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>DealGuide AI - Intelligent Deal Analysis for Professionals</title>
+    <title>DealGuide AI  Intelligent Deal Analysis for Professionals</title>
     <meta name="description" content="DealGuide AI helps professionals analyze and optimize their deals with AI-powered insights and recommendations." />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
   </head>
@@ -11,6 +11,15 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
-    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
-  </body>
+    <!-- Keep this outside the #root so it's not overwritten -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+      <iframe 
+        src="https://www.chatbase.co/chatbot-iframe/5JOhWwAvXyrejbcyRQPag" 
+        width="350" 
+        height="600" 
+        style="border: none; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+      </iframe>
+    </div>
+</body>
 </html>
+
