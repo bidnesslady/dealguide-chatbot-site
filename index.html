@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DealGuide AI Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f4f4f4;
+      text-align: center;
+    }
+    #chatbox {
+      width: 100%;
+      max-width: 600px;
+      height: 500px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      margin: 0 auto;
+      overflow-y: auto;
+      background: white;
+      padding: 10px;
+    }
+    #userInput {
+      margin-top: 20px;
+    }
+    input, button {
+      padding: 10px;
+      width: 70%;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to DealGuide AI Chatbot!</h1>
+  <div id="chatbox"></div>
+
+  <div id="userInput">
+    <input id="inputMessage" type="text" placeholder="Type your question..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('inputMessage').value;
+      if (!input) return;
+
+      const chatbox = document.getElementById('chatbox');
+      chatbox.innerHTML += `<div><strong>You:</strong> ${input}</div>`;
+
+      const response = await fetch('http://localhost:5000/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: input })
+      });
+
+      const data = await response.json();
+      chatbox.innerHTML += `<div><strong>Bot:</strong> ${data.reply}</div>`;
+      chatbox.scrollTop = chatbox.scrollHeight;
+
+      document.getElementById('inputMessage').value = '';
+    }
+  </script>
+
+</body>
+</html>
